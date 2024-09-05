@@ -1,0 +1,19 @@
+name: python-api-demo-cicd
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: codebuild-python-lambda-api-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Build SAM Application
+        uses: actions/checkout@v4
+      - run: sam build
+      - run: csam deploy
