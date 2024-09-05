@@ -13,7 +13,17 @@ jobs:
   build:
     runs-on: codebuild-python-lambda-api-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - name: Build SAM Application
-        uses: actions/checkout@v4
-      - run: sam build
-      - run: csam deploy
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Build SAM Application
+      uses: actions/checkout@v4
+    - run: sam build
+    - run: csam deploy
